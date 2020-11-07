@@ -1,0 +1,35 @@
+body{
+    z-index: 0;
+}
+
+p{
+    margin-bottom: 0rem;
+    font-size: 0.75rem;
+}
+.container{
+    border: 0.25rem solid darkslategray;
+    display: flex;
+    flex-direction: column;
+}
+.name{
+    text-align: center;
+    margin-bottom: 0rem;
+}
+.imageContainer{
+    object-fit: contain;
+}
+h3{
+    text-align: center;
+}
+.updateContainer {
+    position: fixed;
+    z-index: 2;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 5%;
+    background-color: white;
+    margin-right: 10%;
+    padding: 0.5rem;
+    border:  0.12rem solid lightgray;
+
+}

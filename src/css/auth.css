@@ -1,0 +1,15 @@
+label{
+    display: block;
+}
+button{
+    display: block;
+}
+.innerContainer{
+    display: flex;
+}
+input{
+    width: 100%;
+}
+form{
+    width: 100%;
+}
