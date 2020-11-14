@@ -1,7 +1,7 @@
-var platform = window.platform;;
-var H = window.H;
-
-function testDirections(toCords, settings){
+function testDirections(toCords){
+  var mapHolder = window.useHook({getMap: true});
+  var platform = mapHolder.platform;
+  var H = mapHolder.H;  
     var userCords = {};
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
@@ -14,7 +14,6 @@ function testDirections(toCords, settings){
             'transportMode': 'car',
             'origin': (userCords.lat + ',' + userCords.long),
             'destination': (toCords.lat + ',' + toCords.long),
-            // Include the route shape in the response
             'return': 'polyline'
           };
       
@@ -52,8 +51,7 @@ function testDirections(toCords, settings){
                     console.error("Could not delete all objs");
                   }
                   // Add the route polyline and the two markers to the map:
-                  var map = window.map;
-                  map.addObjects([routeLine, startMarker, endMarker]);
+                  window.map.addObjects([routeLine, startMarker, endMarker]);
       
                   // Set the map's viewport to make the whole route visible:
                   map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});

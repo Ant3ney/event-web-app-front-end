@@ -1,16 +1,15 @@
 import React from "react";
-import placeholder from "../images/images.png";
-import data from "../appLogic/data";
-import getEvents from "../appLogic/fetching/getEvents";
-import deleteEvent from "../appLogic/fetching/deleteEvent";
-import showDirections from "../appLogic/hereApi/showDirectionsTo";
-import "../css/event.css";
+import data from "../../appLogic/data";
+import deleteEvent from "../../appLogic/fetching/deleteEvent";
+import showDirections from "../../appLogic/hereApi/showDirectionsTo";
+import "../../css/event.css";
+import EventPreview from './Preview/EventPreview';
 
 function Event(props){
     return(
     <div className="container pb-1 mb-1">
         <h1 className="name">{props.event ? props.event.name : "error"}</h1>
-        <img className="imageContainer" src={placeholder} />
+        <EventPreview event={props.event} />
         <div className="row mb-1">
             <div className="col-6">
                 <p><strong>Location: </strong>{props.event ? props.event.addressLine_1 : "error"}</p>
@@ -30,7 +29,7 @@ function Event(props){
         <div className="mx-auto d-flex">
             <button onClick={handleDirections}>Directions</button>
             {canEdit() ? <button onClick={handleEdit}>Edit</button> : <div></div>}
-            <button onClick={handleDelete}>Delete</button>
+            {canEdit() ? <button onClick={handleDelete}>Delete</button> : <div></div>}
         </div>
     </div>);
 
@@ -46,7 +45,7 @@ function Event(props){
     function handleEdit(event){
         event.preventDefault();
         data.curentId = props.event._id;
-        props.eSet.setShowUpdate(true);
+        data.eSet.setShowUpdate(true);
     }
     function handleDelete(){
         data.curentId = props.event._id;
@@ -54,8 +53,8 @@ function Event(props){
     }
     function canEdit(){
         var event = props.event;
-        var user = props.user;
-        if(user._id === event.createdBy){
+        var user = data.uSet.user;
+        if(user && user._id === event.createdBy){
             return true;
         }
         return false;

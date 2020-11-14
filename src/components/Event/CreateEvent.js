@@ -1,24 +1,7 @@
 import React, { useState } from "react";
-import createEvent from "../appLogic/fetching/createEvent";
+import createEvent from "../../appLogic/fetching/createEvent";
 
-/*
-    Needed values and there spellings
-    name
-    addressLine_1
-    addressLine_2
-    country
-    region
-    city
-    postCode
-    eventStartDate
-    eventEndDate
-    createdBy
-    category
-    visibility
-    notes
-    status
-*/
-function CreateEvent(props){
+function CreateEvent(){
     const [name, setName] = useState(null);
     const [address1, setAddress1] = useState(null);
     const [address2, setAddress2] = useState(null);
@@ -32,7 +15,7 @@ function CreateEvent(props){
     const [visibility, setVisibility] = useState(null); 
     const [notes, setNotes] = useState(null); 
     const [status, setStatus] = useState(null);
-
+    const [previews, setPreviews] = useState([]);
     const [hide, setHide] = useState(false);
 
     return(
@@ -75,12 +58,26 @@ function CreateEvent(props){
                     <input type="text" name="notes" placeholder="Please dont bring your dog." onChange={(e) => {formChange(e, "notes")}} />
                     <label>Status</label>
                     <input type="text" name="status" placeholder="Open" onChange={(e) => {formChange(e, "status")}} />
+                    <span className='uploaderParent'><input className='filepond' name="filepond" multiple data-max-files="3" data-max-file-size="3MB" type="file"/></span>
                 </div>
                 <button className="mx-auto mt-2">Submit</button>
             </form>
             : <div></div>}
         </div>
     );
+
+    function generatePreviews(){
+        preventWarning(previews);//For the purpose of stoping the anoying warning
+        var ponEle = window.ponEle;
+        var newPreviews = [];
+        ponEle.getFiles().forEach((image) => {
+            var encodedImage = image.getFileEncodeBase64String();
+            newPreviews.push(encodedImage);
+        });
+
+        setPreviews(newPreviews);
+        return newPreviews;
+    }
 
     function formChange(event, type){
         switch(type){
@@ -92,37 +89,40 @@ function CreateEvent(props){
                 break
             case "addressLine_2":
                 setAddress2(event.target.value);
-                break
+                break;
             case "country":
                 setCountry(event.target.value);
-                break
+                break;
             case "region":
                 setRegion(event.target.value);
-                break
+                break;
             case "city":
                 setCity(event.target.value);
-                break
+                break;
             case "postCode":
                 setPostCode(event.target.value);
-                break
+                break;
             case "eventStartDate":
                 setEventStartDate(event.target.value);
-                break
+                break;
             case "eventEndDate":
                 setEventEndDate(event.target.value);
-                break
+                break;
             case "category":
                 setCategory(event.target.value);
-                break
+                break;
             case "visibility":
                 setVisibility(event.target.value);
-                break
+                break;
             case "notes":
                 setNotes(event.target.value);
-                break
+                break;
             case "status":
                 setStatus(event.target.value);
-                break
+                break;
+            default:
+                console.error('Default case called. This should not happen');
+                break;
         }
     }
     function handleSubmit(event){
@@ -139,6 +139,7 @@ function CreateEvent(props){
             eventEndDate: eventEndDate,
             category: category,
             visibility: visibility,
+            previews: generatePreviews(),
             notes: notes,
             status: status
         });
@@ -147,6 +148,9 @@ function CreateEvent(props){
     }
     function handleHideBox(event){
         setHide(!hide);
+    }
+    function preventWarning(){
+
     }
 }
 

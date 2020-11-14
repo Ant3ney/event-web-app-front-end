@@ -20,7 +20,7 @@ function runFetch(settings){
             }
         })
         .then((res) => {
-            considerLoging(settings, console.log(res));
+            considerLoging(settings, res);
             return res.json();
         })
         .then((data) => {
@@ -35,8 +35,8 @@ function runFetch(settings){
             resolve(data);
         })
         .catch((err) => {
-            considerLoging(settings, "An error happeoned");
-            considerLoging(settings, err.message);
+            console.error("An error happeoned in initial fetch");
+            console.error(err.message);
             reject(err);
         });
     });   

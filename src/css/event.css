@@ -17,19 +17,75 @@ p{
 }
 .imageContainer{
     object-fit: contain;
+    display: flex;
 }
 h3{
     text-align: center;
 }
 .updateContainer {
     position: fixed;
-    z-index: 2;
+    z-index: 4;
     width: 80%;
     margin-left: 10%;
-    margin-top: 5%;
+    margin-top: 1%;
     background-color: white;
     margin-right: 10%;
     padding: 0.5rem;
     border:  0.12rem solid lightgray;
-
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    justify-content: center;
+    height: 90%;
+    white-space:nowrap;
+}
+.previewImage{
+    min-height: 100%;
+    max-height: 100%;
+    max-width: 80%;
+}
+.previewButton{
+    position: relative;
+    z-index: 2;
+    padding: 0rem;
+}
+.previewContainer{
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80%;
+}
+.placeHolderImage{
+    margin-left: auto;
+    margin-right: auto;
+}
+.updatePreviewContainer{
+    max-height: 5rem;
+    display: flex;
+    width: 100%;
+}
+.editPreviewColumn{
+    max-height: 5rem;
+}
+.makeMaxHeight100{
+    max-height: 100%;
+}
+.editPreviewImageContainer{
+    width: 100%;
+    display: inline-flex;
+    
+}
+.updateExit{
+    position: absolute;
+    z-index: 5;
+    /*left: -2em;*/
+}
+.editPreviewImage{
+    max-width: 100%;
+    max-height: 5rem;
+}
+.EditPreviewImageOuterContainer{
+    margin-left: auto;
+    margin-right: auto;
+    background-color: red;
 }

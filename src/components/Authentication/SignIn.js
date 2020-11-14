@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import "../css/auth.css";
+import "../../css/auth.css";
+import handleSignIn from "../../appLogic/fetching/signIn";
 
-function SignUp(props){
+function SignIn(){
     const [nameValue, setNameValue] = useState("not set");
     const [passwordValue, setPasswordValue] = useState("not set");
 
     return(
         <form onSubmit={handleSubmit}>
-            <h3>Sign up</h3>
+            <h3>Sign in</h3>
             <label>Username</label>
             <input type="text" name="name" onChange={(event) => {formChange(event, "nameChange");}}/>
             <label>Password</label>
@@ -35,21 +36,8 @@ function SignUp(props){
 
         data = JSON.stringify(data);
 
-        console.log(data);
-
-        fetch(props.fSet.fetchUrl + '/user/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: data
-        }).then((res) => {
-            console.log(res);
-            return res.json();
-        }).then((data) => {
-            console.log(data);
-        });
+        handleSignIn(data);
     }
 }
 
-export default SignUp;
+export default SignIn;

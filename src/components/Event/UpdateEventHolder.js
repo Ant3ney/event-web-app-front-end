@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import sData from "../appLogic/data";
-import updateEvent from "../appLogic/fetching/updateEvent";
+import React, { useState, useEffect } from "react";
+import sData from "../../appLogic/data";
+import updateEvent from "../../appLogic/fetching/updateEvent";
+import EditPreviewContainer from './Preview/EditPreviewContainer';
 
 function UpdateEventHolder(props){
+    var events = sData.eSet.events;
     var index = 0;
     const event = getCurrentEvent();
+    var ponEle;
+    var FilePond = window.FilePond;
 
     const [name, setName] = useState(event.name);
     const [address1, setAddress1] = useState(event.addressLine_1);
@@ -19,10 +23,21 @@ function UpdateEventHolder(props){
     const [visibility, setVisibility] = useState(event.visibility); 
     const [notes, setNotes] = useState(event.notes); 
     const [status, setStatus] = useState(event.status);
+    const [previews, setPreviews] = useState(event.previews)
+
+    useEffect(() => {
+        var fileInputEle  = document.querySelector('.editPond');
+        // eslint-disable-next-line
+        ponEle = FilePond.create(fileInputEle, {
+            maxFiles: 10,
+            maxFileSize: '3MB',
+            allowMultiple: true
+        });
+    }, []);
 
     return(
         <div className="updateContainer">
-            <h3>Update Event</h3>
+            <h3 style={{marginTop: '5rem'}}>Update Event</h3>
             <form className="row" onSubmit={handleUpdate}>
                 <div className="col-6">
                     <label>Name</label>
@@ -40,7 +55,7 @@ function UpdateEventHolder(props){
                     <label>City</label>
                     <input type="text" name="city" placeholder="Torrance" defaultValue={event.city} onChange={(e) => {formChange(e, "city")}} />
                 </div>
-                <div className="col-6">
+                <div className="col-6 seceondEditCol">
                     <label>Event Start Date</label>
                     <input type="text" name="eventStartDate" placeholder="20/01/2021 01:02:10" defaultValue={event.eventStartDate} onChange={(e) => {formChange(e, "eventStartDate")}} />
                     <label>Event End Date</label>
@@ -53,15 +68,38 @@ function UpdateEventHolder(props){
                     <input type="text" name="notes" placeholder="Please dont bring your dog." defaultValue={event.notes} onChange={(e) => {formChange(e, "notes")}} />
                     <label>Status</label>
                     <input type="text" name="status" placeholder="Open" defaultValue={event.status} onChange={(e) => {formChange(e, "status")}} />
+                    <input className='filepond editPond' name="filepond" multiple data-max-files="3" data-max-file-size="3MB" type="file"/>
                 </div>
-                <div class="mx-auto d-flex mt-2">
+                <div className="mx-auto d-flex mt-2">
                     <button onClick={handleUpdate}>Submit</button>
                     <button onClick={handleClose}>Close</button>
                 </div>
             </form>
+            <div className="mx-auto row updatePreviewContainer mt-2">
+                    {previews.length > 0 ? 
+                    previews.map((preview, i) => 
+                        <EditPreviewContainer 
+                         key={i} 
+                         index={i} 
+                         removePreview={removePreview} 
+                         preview={preview} 
+                        />) :
+                    <div>There are no images to edit</div>}
+            </div>
         </div>
     );
 
+    function removePreview(i){
+        var newPreviews = []
+        previews.forEach((preview, j) => {
+            if(j === i){
+                return
+            }
+            newPreviews.push(preview);
+        });
+
+        setPreviews(newPreviews);
+    }
     function formChange(event, type){
         switch(type){
             case "name":
@@ -111,6 +149,17 @@ function UpdateEventHolder(props){
 
     function handleUpdate(event){
         event.preventDefault();
+
+        var newPreviews = []
+        previews.forEach((preview) => {
+            newPreviews.push(preview);
+        });
+        if(ponEle){
+            ponEle.getFiles().forEach((preview) => {
+                newPreviews.push(preview.getFileEncodeBase64String());
+            });
+        }
+
         var data = JSON.stringify({
             name: name,
             addressLine_1: address1,
@@ -124,18 +173,18 @@ function UpdateEventHolder(props){
             category: category,
             visibility: visibility,
             notes: notes,
-            status: status
+            status: status,
+            previews: newPreviews
         });
 
         updateEvent(data);
     }
 
     function handleClose(){
-        props.eSet.setShowUpdate(false);
+        sData.eSet.setShowUpdate(false);
     }
 
     function getCurrentEvent(){
-        var events = props.eSet.events;
         for(index= 0; index < events.length; index++){
             if(events[index]._id === sData.curentId){
                 return events[index];
